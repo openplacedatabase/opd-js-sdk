@@ -153,7 +153,7 @@ opdClient.getPlace("<place id>", function(error, data) {
 });
 ````
 
-###getPlaces(id, callback(error, data))
+###getPlaces(places, callback(error, data))
 Get several places.
 ````javascript
 var placesIWant = ["<place1>","<place2>","<place3>"];
