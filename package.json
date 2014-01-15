@@ -1,0 +1,23 @@
+{
+  "name": "opd-sdk",
+  "version": "0.0.1",
+  "description": "Open Place Database SDK",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openplacedatabase/opd-js-sdk.git"
+  },
+  "main": "src/sdk.js",
+  "dependencies": {
+    "superagent": "~0.16.0",
+    "geojson-assert": "0.0.2"
+  },
+  "devDependencies": {
+    "uglify-js": "~2.4.9",
+    "mocha": "~1.17.0"
+  },
+  "scripts": {
+    "test": "npm run build && ./node_modules/mocha/bin/mocha",
+    "build": "cat src/sdk.js | ./node_modules/uglify-js/bin/uglifyjs -cv > build/sdk.js"
+  }
+}
