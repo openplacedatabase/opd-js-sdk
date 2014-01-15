@@ -6,7 +6,7 @@ The javascript sdk for the Open Place Database API
 `npm install opd-sdk --save`
 
 ##Notes
-* All returned or thrown errors are standard javascript error object created via `new Error('message here')`
+* All returned or thrown errors are standard javascript error objects created via `new Error('message here')`
 * This library uses the `debug` module (found [here](https://npmjs.org/package/debug)). To enable it, set the `DEBUG` environment variable to `opd-sdk` (`DEBUG=opd-sdk`)
 * To view the schemas for places and geojsons, go [here](https://github.com/openplacedatabase/www).
 
@@ -85,7 +85,7 @@ opdClient.searchPlaces('My query String Here', function(error, data) {
 // Overwrite ALL the options. Bwahahahaha.
 var opdSDK = require('opd-sdk'),
     opdClient = opdSDK.createClient({
-      url:'localhost:8080/api',
+      url:'http://localhost:8080/api',
       username:'nananananananananananananananana',
       password: 'BATMAAAN'
     });
@@ -93,7 +93,7 @@ var opdSDK = require('opd-sdk'),
 
 ####url
 The base url to use for the requests. Make sure to include the port if you are running locally.
-Default: `www.openplacedatabase.com/api/`
+Default: `http://www.openplacedatabase.com/api/`
 
 ####username
 The username to use for authentication. Only required for `deletePlace(s)` and `savePlace(s)`.
@@ -121,7 +121,7 @@ var place = opdSDK.createPlace()
 Find some historical places. Booyah. Note that `options` is optional.
 ````javascript
 var options = {
-  count: 42, // Must be between 0 and 100, default 10
+  count: 42, // Must be between 1 and 100, default 10
   offset: 76 // Must be an integer > 0, default 0
 };
 
@@ -421,19 +421,72 @@ opdClient.getChanges(from, to, function(error, data) {
 ##Place Methods
 
 ###addName(name, [from], [to])
-This will add a name to the place. Returns this for chaining.
+This will add a name to the place. Returns `this` for chaining.
+````javascript
+var place = opdSDK.createPlace()
+              .addName('A name throughout time')
+              .addName('A name that was recently used','2000-01-01')
+              .addName('An old name. Only used for a little bit','1600-01-01','1650-01-01')
+              .addName('Another old name. Not sure when they started using this',null,'1500-01-01')
+              .place;
+````
 
-###addGeoJSON(name, [from], [to])
-This will add a geoJSON to the place. Returns this for chaining.
+###addGeoJSON(geoJSON, [from], [to])
+This will add a geoJSON to the place. Returns `this` for chaining.
+````javascript
+var placeObj = opdSDK.createPlace()
+                .addGeoJSON(geojson1,null,'1599-12-31')
+                .addGeoJSON(geojson2,'1600-01-01','1649-12-31')
+                .addGeoJSON(geojson3,'1650-01-01');
 
-###addSource(name, [from], [to])
-This will add a source. Returns this for chaining.
+var place = placeObj.place;
+var geojsons = placeObj.geoJSON;
+````
+
+###addSource(source)
+This will add a source. Returns `this` for chaining.
+````javascript
+var place = opdSDK.createPlace()
+              .addSource('Source 1')
+              .addSource('Source 2')
+              .place;
+````
 
 ###place
 This will return the place object.
+````javascript
+var place = opdSDK.createPlace()
+              .addName('A name throughout time')
+              .addGeoJSON(geojson1)
+              .addSource('Source 1')
+              .place;
+````
 
 ###geoJSON
 This will return an object containing geoJSONs.
+````javascript
+var geojsons = opdSDK.createPlace()
+                .addGeoJSON(geojson1,null,1599-12-31')
+                .addGeoJSON(geojson2,'1600-01-01','1649-12-31')
+                .addGeoJSON(geojson3,'1650-01-01')
+                .geoJSON;
+````
 
 ###save(client, callback(error))
-This will save the current shape and any associated geojsons. Returns this for chaining
+This will save the current shape and any associated geojsons using the passed in client. Returns `this` for chaining.
+````javascript
+var opdclient = opdSDK.createClient(myOptions)
+
+opdSDK.createPlace()
+  .addName('My Fully Qualified Place Name','2000-01-01')
+  .addGeoJSON(myGeoJSON)
+  .addSource('I found this on the beach and though you should have it')
+  .save(opdSDK.createClient(myOptions),function(error) {
+    if(error) {
+      console.log('something broke :(');
+    } else {
+      console.log('success');
+    }
+  });
+
+````
