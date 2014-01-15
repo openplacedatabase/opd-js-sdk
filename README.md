@@ -466,7 +466,7 @@ var place = opdSDK.createPlace()
 This will return an object containing geoJSONs.
 ````javascript
 var geojsons = opdSDK.createPlace()
-                .addGeoJSON(geojson1,null,1599-12-31')
+                .addGeoJSON(geojson1,null,'1599-12-31')
                 .addGeoJSON(geojson2,'1600-01-01','1649-12-31')
                 .addGeoJSON(geojson3,'1650-01-01')
                 .geoJSON;
