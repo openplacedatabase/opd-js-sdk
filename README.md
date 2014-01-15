@@ -397,7 +397,7 @@ opdClient.deletePlaces(geojsons, function(error, data) {
 ````
 
 ###getChanges(from, to, callback(error, data))
-Get a place.
+Get changes for a given time range.
 ````javascript
 // Only get places that have changed  since our last sync time
 var from = getLastSyncTime();
