@@ -21,7 +21,7 @@ Again, but with options
 ````javascript
 var opdSDK = require('opd-sdk'),
     opdClient = opdSDK.createClient({
-      url:'localhost:8080/api'
+      host: 'localhost:8080'
     });
 ````
 
