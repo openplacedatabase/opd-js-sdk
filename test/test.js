@@ -5,7 +5,10 @@ var sdk = require(__dirname + '/../build/sdk.js'),
     fs = require('fs');
     
 var nock = require('nock')('http://www.openplacedatabase.com').defaultReplyHeaders({'Content-Type':'application/json'});
-var client = sdk.createClient();
+var client = sdk.createClient({
+  username: 'foo',
+  password: 'bar'
+});
     
 describe('sdk', function(){
 
@@ -274,9 +277,11 @@ function nockScope(method, url, status, body){
   if(_.isUndefined(status)){
     status = 200;
   }
-  return nock.intercept(url, method, body).reply(status,  function(url, requestBody){
-    var filename = __dirname + '/responses/' + method + '_' + url.replace(/^\//,'').replace(/[\/\?&=]/g,'_') + '.json';
-    debug(filename);
-    return fs.createReadStream(filename);
-  });
+  return nock.intercept(url, method, body)
+    .matchHeader('Authorization', 'Basic Zm9vOmJhcg==')
+    .reply(status,  function(url, requestBody){
+      var filename = __dirname + '/responses/' + method + '_' + url.replace(/^\//,'').replace(/[\/\?&=]/g,'_') + '.json';
+      debug(filename);
+      return fs.createReadStream(filename);
+    });
 };

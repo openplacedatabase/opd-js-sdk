@@ -17,6 +17,8 @@ var defaultFrom = '-9999-01-01',
 var client = function(options){
   options = options || {};
   this.host = options.host ? options.host : 'http://www.openplacedatabase.com';
+  this.username = options.username;
+  this.password = options.password;
 };
 
 /******************
@@ -215,7 +217,7 @@ client.prototype._delete = function(url, callback){
  * Generic function for HTTP requests
  */
 client.prototype._request = function(method, url, data, callback){
-  var r = request(method, this.host + url);
+  var r = request(method, this.host + url).auth(this.username, this.password);
   if(data){
     r.send(data);
   }
