@@ -138,6 +138,17 @@ describe('sdk', function(){
     });
   });
   
+  it('deletePlaces', function(done){
+    var ids = ['a90af1cb-7e45-4235-aac0-fabf0233edb9','d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba'];
+    var scope = deleteNockScope('/api/v0/places/' + ids.join(','));
+    client.deletePlaces(ids, function(error, data){
+      assert(data['a90af1cb-7e45-4235-aac0-fabf0233edb9']);
+      assert(data['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba']);
+      scope.done();
+      done();
+    });
+  });
+  
   it('getGeoJSON', function(done){
     var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1');
     client.getGeoJSON('8fbe18e1-5d04-4b82-a0e9-1c386ed00de7', 1, function(error, geojson){
@@ -152,7 +163,7 @@ describe('sdk', function(){
   it('getGeoJSONs', function(done){
     var ids = {
       '8fbe18e1-5d04-4b82-a0e9-1c386ed00de7': [1],
-      'd8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba': [1],
+      'd8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba': [1]
     };
     var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1,d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba/1');
     client.getGeoJSONs(ids, function(error, geojsons){

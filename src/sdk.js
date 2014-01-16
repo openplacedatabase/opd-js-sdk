@@ -94,6 +94,22 @@ client.prototype.deletePlace = function(id, callback){
   this._delete('/api/v0/places/' + id, callback);
 };
 
+/**
+ * Delete multiple places
+ */
+client.prototype.deletePlaces = function(ids, callback){
+  if(!_.isArray(ids)) {
+    throw new Error('ids must be an array');
+  }
+  this._delete('/api/v0/places/' + ids.join(','), function(error, response){
+    var ids = {};
+    _.each(response, function(data, id){
+      ids[id] = data.status.code === 200;
+    });
+    callback(error, ids);
+  });
+};
+
 /******************
  *    geojson     *
  ******************/
