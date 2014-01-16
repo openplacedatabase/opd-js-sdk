@@ -221,6 +221,15 @@ describe('sdk', function(){
     });
   });
   
+  it('deleteGeoJSON', function(done){
+    var scope = deleteNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb9/1');
+    client.deleteGeoJSON('a90af1cb-7e45-4235-aac0-fabf0233edb9', '1', function(error){
+      assert(_.isUndefined(error));
+      scope.done();
+      done();
+    });
+  });
+  
   it('getChanges', function(done){
     var scope = getNockScope('/api/v0/changes?from=1389710140336&to=1389724640538');
     client.getChanges(1389710140336, 1389724640538, function(error, changes){

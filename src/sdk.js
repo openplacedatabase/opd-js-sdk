@@ -155,6 +155,13 @@ client.prototype.saveGeoJSONs = function(geojsons, callback){
   this._post('/api/v0/places', postData, callback);
 };
 
+/**
+ * Delete a geojson
+ */
+client.prototype.deleteGeoJSON = function(placeId, geojsonId, callback){
+  this._delete('/api/v0/places/' + placeId + '/' + geojsonId, callback);
+};
+
 /******************
  *    changes     *
  ******************/
