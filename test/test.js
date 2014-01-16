@@ -45,6 +45,7 @@ describe('sdk', function(){
   it('getPlace', function(done){
     var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7');
     client.getPlace('8fbe18e1-5d04-4b82-a0e9-1c386ed00de7', function(error, place){
+      assert(_.isUndefined(error));
       assert.equal(place.id, '8fbe18e1-5d04-4b82-a0e9-1c386ed00de7');
       scope.done();
       done();
@@ -74,6 +75,31 @@ describe('sdk', function(){
   it('getPlaces invalid ids parameter', function(){
     assert.throws(function(){
       client.getPlaces('', function(){});
+    });
+  });
+  
+  it('savePlace', function(done){
+    var postData = {
+      "id":"a90af1cb-7e45-4235-aac0-fabf0233edb9",
+      "version":1,
+      "names":[],
+      "sources":[],
+      "geojsons":[]
+    };
+    var scope = postNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb9', postData, 200);
+    client.savePlace('a90af1cb-7e45-4235-aac0-fabf0233edb9', postData, function(error){
+      assert(_.isUndefined(error));
+      scope.done();
+      done();
+    });
+  });
+  
+  it('savePlace 400', function(done){
+    var scope = postNockScope('/api/v0/places/bad', {id:'bad'}, 400);
+    client.savePlace('bad', {id:'bad'}, function(error){
+      assert(!_.isUndefined(error));
+      scope.done();
+      done();
     });
   });
   
@@ -116,8 +142,19 @@ describe('sdk', function(){
 
 });
 
-function getNockScope(url){
-  return nock.get(url).reply(200, function(url, requestBody){
+function getNockScope(url, status){
+  return nockScope('GET', url, status);
+};
+
+function postNockScope(url, data, status){
+  return nockScope('POST', url, status, data);
+};
+
+function nockScope(method, url, status, body){
+  if(_.isUndefined(status)){
+    status = 200;
+  }
+  return nock.intercept(url, method, body).reply(status,  function(url, requestBody){
     var filename = __dirname + '/responses/' + url.replace(/^\//,'').replace(/[\/\?&=]/g,'_') + '.json';
     debug(filename);
     return fs.createReadStream(filename);

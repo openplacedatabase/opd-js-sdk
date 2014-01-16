@@ -50,6 +50,19 @@ client.prototype.getPlaces = function(ids, callback){
 };
 
 /**
+ * Create a place
+ */
+client.prototype.savePlace = function(id, place, callback){
+  if(!_.isString(id)){
+    throw new Error('place id must be a string');
+  }
+  if(!_.isObject(place)){
+    throw new Error('place must be an object');
+  }
+  this._post('/api/v0/places/' + id, place, callback);
+};
+
+/**
  * Get a geojson
  */
 client.prototype.getGeoJSON = function(placeId, geojsonId, callback){
@@ -82,14 +95,32 @@ client.prototype.getChanges = function(from, to, callback){
  ****************************/ 
 
 /**
- * Get json from the specified URL
+ * GET the specified url
  */
 client.prototype._get = function(url, callback){
   request(this.host + url) 
     .end(function(error, response){
-      var error = error || response.error;
-      var data = response.body && response.body.data ? response.body.data : null;
+      var error = error || response.error || undefined;
+      var data = response.body && response.body.data ? response.body.data : undefined;
       if(error || !data) {
+        debug(url);
+        debug(response.status);
+        debug(response.data || response.text);
+      }
+      _nextTick(function(){ callback(error, data); });
+    });
+};
+
+/**
+ * POST to the specified url
+ */
+client.prototype._post = function(url, data, callback){
+  request.post(this.host + url)
+    .send(data)
+    .end(function(error, response){
+      var error = error || response.error || undefined;
+      var data = response.body && response.body.data ? response.body.data : undefined;
+      if(error) {
         debug(url);
         debug(response.status);
         debug(response.data || response.text);
