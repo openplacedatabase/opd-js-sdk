@@ -50,7 +50,14 @@ describe('sdk', function(){
     });
   });
   
-  // TODO: test 404 on getPlace
+  it('getPlace 404', function(done){
+    var scope = nock.get('/api/v0/places/foo').reply(404, '');
+    client.getPlace('foo', function(error, place){
+      assert(typeof error !== 'undefined');
+      scope.done();
+      done();
+    });
+  });
   
   it('getPlaces', function(done){
     var ids = ['8fbe18e1-5d04-4b82-a0e9-1c386ed00de7','d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba'],
