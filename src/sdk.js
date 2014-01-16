@@ -136,6 +136,17 @@ client.prototype.getGeoJSONs = function(idMap, callback){
 };
 
 /**
+ * Save a geojson
+ */
+client.prototype.saveGeoJSON = function(placeId, geojsonId, geojson, callback){
+  this._post('/api/v0/places/' + placeId + '/' + geojsonId, geojson, callback);
+};
+
+/******************
+ *    changes     *
+ ******************/
+
+/**
  * Get a list of changes during the specified time interval
  */
 client.prototype.getChanges = function(from, to, callback){

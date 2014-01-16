@@ -174,6 +174,19 @@ describe('sdk', function(){
     });
   });
   
+  it('saveGeoJSON', function(done){
+    var geojson = {
+      "type":"Point",
+      "coordinates":[0,0]
+    };
+    var scope = postNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb/1');
+    client.saveGeoJSON('a90af1cb-7e45-4235-aac0-fabf0233edb', '1', geojson, function(error){
+      assert(_.isUndefined(error));
+      scope.done();
+      done();
+    });
+  });
+  
   it('getChanges', function(done){
     var scope = getNockScope('/api/v0/changes?from=1389710140336&to=1389724640538');
     client.getChanges(1389710140336, 1389724640538, function(error, changes){
