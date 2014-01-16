@@ -52,18 +52,6 @@ Default: `null`
 The password to use for authentication. Only required for `deletePlace(s)` and `savePlace(s)`.
 Default: `null`
 
-[Skip to Client Methods](#client-methods)
-
-###createPlace()
-````javascript
-var place = opdSDK.createPlace()
-              .addName('my place')
-              .addGeoJSON(myGeoJSON)
-              .place;
-````
-
-[Skip to Place Methods](#place-methods)
-
 ##Client Methods
 
 ###searchPlaces(query, [options], callback(error, data))
