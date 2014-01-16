@@ -87,6 +87,13 @@ client.prototype.savePlaces = function(places, callback){
   });
 };
 
+/**
+ * Delete place
+ */
+client.prototype.deletePlace = function(id, callback){
+  this._delete('/api/v0/places/' + id, callback);
+};
+
 /******************
  *    geojson     *
  ******************/
@@ -127,37 +134,48 @@ client.prototype.getChanges = function(from, to, callback){
  * GET the specified url
  */
 client.prototype._get = function(url, callback){
-  request(this.host + url) 
-    .end(function(error, response){
-      var error = error || response.error || undefined;
-      var data = response.body && response.body.data ? response.body.data : undefined;
-      if(error || !data) {
-        debug(url);
-        debug(response.status);
-        debug(response.data || response.text);
-      }
-      _nextTick(function(){ callback(error, data); });
-    });
+  this._request('GET', url, null, callback);
 };
 
 /**
  * POST to the specified url
  */
 client.prototype._post = function(url, data, callback){
-  request.post(this.host + url)
-    .send(data)
-    .end(function(error, response){
-      var error = error || response.error || undefined;
-      var data = response.body && response.body.data ? response.body.data : undefined;
-      if(error) {
-        debug(url);
-        debug(response.status);
-        debug(response.data || response.text);
-      }
-      _nextTick(function(){ callback(error, data); });
-    });
+  this._request('POST', url, data, callback);
+};
+
+/**
+ * DELETE the specified url
+ */
+client.prototype._delete = function(url, callback){
+  this._request('DELETE', url, null, callback);
+};
+
+/**
+ * Generic function for HTTP requests
+ */
+client.prototype._request = function(method, url, data, callback){
+  var r = request(method, this.host + url);
+  if(data){
+    r.send(data);
+  }
+  r.end(function(error, response){
+    var error = error || response.error || undefined;
+    var data = response.body && response.body.data ? response.body.data : undefined;
+    if(error) {
+      debug(url);
+      debug(response.status);
+      debug(response.data || response.text);
+    }
+    _nextTick(function(){ callback(error, data); });
+  });
 };
  
+/**
+ * Call the function on the next tick.
+ * Best to call callbacks this way so
+ * they get a new stack
+ */ 
 function _nextTick(f){
   setTimeout(f, 0);
 };

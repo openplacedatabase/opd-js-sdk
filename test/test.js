@@ -120,10 +120,19 @@ describe('sdk', function(){
         "geojsons":[]
       }
     };
-    var scope = postNockScope('/api/v0/places', postData, 200);
+    var scope = postNockScope('/api/v0/places', postData);
     client.savePlaces(postData, function(error, data){
       assert(!data['a90af1cb-7e45-4235-aac0-fabf0233edb9']);
       assert(data['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba']);
+      scope.done();
+      done();
+    });
+  });
+  
+  it('deletePlace', function(done){
+    var scope = deleteNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb9');
+    client.deletePlace('a90af1cb-7e45-4235-aac0-fabf0233edb9', function(error){
+      assert(_.isUndefined(error));
       scope.done();
       done();
     });
@@ -168,6 +177,10 @@ describe('sdk', function(){
 
 });
 
+/**
+ * Helper functions for getting a nock scope
+ */
+
 function getNockScope(url, status){
   return nockScope('GET', url, status);
 };
@@ -176,12 +189,16 @@ function postNockScope(url, data, status){
   return nockScope('POST', url, status, data);
 };
 
+function deleteNockScope(url, status){
+  return nockScope('DELETE', url, status);
+};
+
 function nockScope(method, url, status, body){
   if(_.isUndefined(status)){
     status = 200;
   }
   return nock.intercept(url, method, body).reply(status,  function(url, requestBody){
-    var filename = __dirname + '/responses/' + url.replace(/^\//,'').replace(/[\/\?&=]/g,'_') + '.json';
+    var filename = __dirname + '/responses/' + method + '_' + url.replace(/^\//,'').replace(/[\/\?&=]/g,'_') + '.json';
     debug(filename);
     return fs.createReadStream(filename);
   });
