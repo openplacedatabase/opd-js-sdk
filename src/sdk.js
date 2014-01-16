@@ -142,6 +142,19 @@ client.prototype.saveGeoJSON = function(placeId, geojsonId, geojson, callback){
   this._post('/api/v0/places/' + placeId + '/' + geojsonId, geojson, callback);
 };
 
+/**
+ * Save multiple geojsons
+ */
+client.prototype.saveGeoJSONs = function(geojsons, callback){
+  var postData = {};
+  _.each(geojsons, function(geos, placeId){
+    _.each(geos, function(geo, geoId){
+      postData[placeId+'/'+geoId] = geo;
+    });
+  });
+  this._post('/api/v0/places', postData, callback);
+};
+
 /******************
  *    changes     *
  ******************/

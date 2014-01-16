@@ -187,6 +187,40 @@ describe('sdk', function(){
     });
   });
   
+  // This is just testing that the post data is properly
+  // formatted because the url conflicts with savePlaces
+  // so we can't really test the format of the response
+  it('saveGeoJSONs', function(done){
+    var geos = {
+      "a90af1cb-7e45-4235-aac0-fabf0233edb": {
+        "1": {
+          "type":"Point",
+          "coordinates":[0,0]
+        },
+        "2": {
+          "type":"Point",
+          "coordinates":[1,1]
+        }
+      }
+    };
+    var postData = {
+      "a90af1cb-7e45-4235-aac0-fabf0233edb/1": {
+        "type":"Point",
+        "coordinates":[0,0]
+      },
+      "a90af1cb-7e45-4235-aac0-fabf0233edb/2": {
+        "type":"Point",
+        "coordinates":[1,1]
+      }
+    };
+    var scope = postNockScope('/api/v0/places', postData);
+    client.saveGeoJSONs(geos, function(error, response){
+      assert(_.isUndefined(error));
+      scope.done();
+      done();
+    });
+  });
+  
   it('getChanges', function(done){
     var scope = getNockScope('/api/v0/changes?from=1389710140336&to=1389724640538');
     client.getChanges(1389710140336, 1389724640538, function(error, changes){
