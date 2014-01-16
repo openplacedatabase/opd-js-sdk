@@ -162,6 +162,19 @@ client.prototype.deleteGeoJSON = function(placeId, geojsonId, callback){
   this._delete('/api/v0/places/' + placeId + '/' + geojsonId, callback);
 };
 
+/**
+ * Delete multiple geojsons
+ */
+client.prototype.deleteGeoJSONs = function(idMap, callback){
+  var ids = [];
+  _.each(idMap, function(geoIds, placeId){
+    _.each(geoIds, function(geoId){
+      ids.push(placeId + '/' + geoId);
+    });
+  });
+  this._delete('/api/v0/places/' + ids.join(','), callback);
+};
+
 /******************
  *    changes     *
  ******************/

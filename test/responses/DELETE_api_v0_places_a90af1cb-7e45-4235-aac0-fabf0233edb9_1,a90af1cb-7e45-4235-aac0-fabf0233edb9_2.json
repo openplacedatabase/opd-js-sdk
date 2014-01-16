@@ -1,0 +1,22 @@
+{
+  "status": {
+    "code": 200,
+    "msgs": []
+  },
+  "data": {
+    "a90af1cb-7e45-4235-aac0-fabf0233edb9/1": {
+      "status": {
+        "code": 200,
+        "msgs": []
+      },
+      "data": true
+    },
+    "a90af1cb-7e45-4235-aac0-fabf0233edb9/2": {
+      "status": {
+        "code": 200,
+        "msgs": []
+      },
+      "data": true
+    }
+  }
+}

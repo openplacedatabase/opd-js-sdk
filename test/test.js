@@ -230,6 +230,16 @@ describe('sdk', function(){
     });
   });
   
+  it('deleteGeoJSONs', function(done){
+    var scope = deleteNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb9/1,a90af1cb-7e45-4235-aac0-fabf0233edb9/2');
+    client.deleteGeoJSONs({'a90af1cb-7e45-4235-aac0-fabf0233edb9':['1','2']}, function(error, data){
+      assert(data['a90af1cb-7e45-4235-aac0-fabf0233edb9/1']);
+      assert(data['a90af1cb-7e45-4235-aac0-fabf0233edb9/2']);
+      scope.done();
+      done();
+    });
+  });
+  
   it('getChanges', function(done){
     var scope = getNockScope('/api/v0/changes?from=1389710140336&to=1389724640538');
     client.getChanges(1389710140336, 1389724640538, function(error, changes){
