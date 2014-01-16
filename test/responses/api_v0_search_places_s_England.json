@@ -1,0 +1,241 @@
+{
+  "status": {
+    "code": 200,
+    "msgs": []
+  },
+  "data": {
+    "total": 28,
+    "results": [
+      {
+        "id": "8fbe18e1-5d04-4b82-a0e9-1c386ed00de7",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Derbyshire County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443372914
+      },
+      {
+        "id": "d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Leicestershire County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443376231
+      },
+      {
+        "id": "da17c4c7-7a7f-4e44-8399-2c2005e71ed5",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "North Yorkshire County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443377881
+      },
+      {
+        "id": "f0dbe9cc-d4a2-4832-952e-386e3ad070fb",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "West Sussex County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443380778
+      },
+      {
+        "id": "25ae79d1-512b-436b-a00a-5678de8b1289",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Cumbria County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443372429
+      },
+      {
+        "id": "5bd49821-10b2-49a9-adbc-03fbef837d99",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Hertfordshire County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443375238
+      },
+      {
+        "id": "21bf4a38-478b-484f-9209-af3ef5cec19b",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "East Sussex County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443373719
+      },
+      {
+        "id": "54eebb2c-4a92-4ca7-a5f9-0ea9069f95b5",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Somerset County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443379120
+      },
+      {
+        "id": "4d3827ec-8e4f-48ea-84e2-6bcf5a9b0a2f",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Warwickshire County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443380528
+      },
+      {
+        "id": "2c29c46c-46f9-4aec-9e6c-64be303e3010",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Dorset County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443373415
+      }
+    ]
+  }
+}

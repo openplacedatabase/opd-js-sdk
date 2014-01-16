@@ -1,24 +1,80 @@
 var sdk = require(__dirname + '/../build/sdk.js'),
-    assert = require('assert');
+    assert = require('assert'),
+    debug = require('debug')('opd-sdk-test'),
+    fs = require('fs'),
+    nock = require('nock')('http://www.openplacedatabase.com').defaultReplyHeaders({'Content-Type':'application/json'});
     
-var client = sdk.createClient({ host: 'http://openplacedatabase.apiary.io' });
+var client = sdk.createClient();
     
 describe('sdk', function(){
 
   it('searchPlaces', function(done){
-    client.searchPlaces('England', { count: 15 }, function(error, data){
+    var scope = getNockScope('/api/v0/search/places?s=England');
+    client.searchPlaces('England', function(error, data){
       assert.equal(data.total, 28);
       assert.equal(data.results.length, 10);
       assert.equal(data.results[0].id, '8fbe18e1-5d04-4b82-a0e9-1c386ed00de7');
+      scope.done();
+      done();
+    });
+  });
+
+  it('searchPlaces count 5', function(done){
+    var scope = getNockScope('/api/v0/search/places?s=England&count=5');
+    client.searchPlaces('England', { count: 5 }, function(error, data){
+      assert.equal(data.total, 28);
+      assert.equal(data.results.length, 5);
+      assert.equal(data.results[0].id, '8fbe18e1-5d04-4b82-a0e9-1c386ed00de7');
+      scope.done();
+      done();
+    });
+  });
+  
+  it('searchPlaces offset 25', function(done){
+    var scope = getNockScope('/api/v0/search/places?s=England&offset=25');
+    client.searchPlaces('England', { offset: 25 }, function(error, data){
+      assert.equal(data.total, 28);
+      assert.equal(data.results.length, 3);
+      assert.equal(data.results[0].id, '8ea15391-0096-4a6b-8885-7d3154f6cd98');
+      scope.done();
       done();
     });
   });
 
   it('getPlace', function(done){
+    var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7');
     client.getPlace('8fbe18e1-5d04-4b82-a0e9-1c386ed00de7', function(error, place){
       assert.equal(place.id, '8fbe18e1-5d04-4b82-a0e9-1c386ed00de7');
+      scope.done();
       done();
     });
   });
   
+  // TODO: test 404 on getPlace
+  
+  it('getPlaces', function(done){
+    var ids = ['8fbe18e1-5d04-4b82-a0e9-1c386ed00de7','d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba'],
+        scope = getNockScope('/api/v0/places/' + ids.join(','));
+    client.getPlace(ids, function(error, places){
+      assert.equal(places[ids[0]].data.id, ids[0]);
+      assert.equal(places[ids[1]].data.id, ids[1]);
+      scope.done();
+      done();
+    });
+  });
+  
+  it('getPlaces invalid ids parameter', function(){
+    assert.throws(function(){
+      client.getPlaces('', function(){});
+    });
+  });
+
 });
+
+function getNockScope(url){
+  return nock.get(url).reply(200, function(url, requestBody){
+    var filename = __dirname + '/responses/' + url.replace(/^\//,'').replace(/[\/\?&=]/g,'_') + '.json';
+    debug(filename);
+    return fs.createReadStream(filename);
+  });
+};

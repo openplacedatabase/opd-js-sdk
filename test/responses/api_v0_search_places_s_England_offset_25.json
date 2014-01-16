@@ -1,0 +1,80 @@
+{
+  "status": {
+    "code": 200,
+    "msgs": []
+  },
+  "data": {
+    "total": 28,
+    "results": [
+      {
+        "id": "8ea15391-0096-4a6b-8885-7d3154f6cd98",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Suffolk County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443379935
+      },
+      {
+        "id": "bc01dba3-10fe-43e8-a11b-e1d11f93198a",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Worcestershire County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443381082
+      },
+      {
+        "id": "c0d66cc4-dab7-4b3a-bf3e-d88813b32e23",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Lancashire County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443375934
+      }
+    ]
+  }
+}

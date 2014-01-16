@@ -52,8 +52,6 @@ Default: `null`
 The password to use for authentication. Only required for `deletePlace(s)` and `savePlace(s)`.
 Default: `null`
 
-##Client Methods
-
 ###searchPlaces(query, [options], callback(error, data))
 Find some historical places. Booyah. Note that `options` is optional.
 ````javascript

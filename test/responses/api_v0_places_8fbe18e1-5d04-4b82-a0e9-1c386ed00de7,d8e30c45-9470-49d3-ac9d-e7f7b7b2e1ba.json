@@ -1,0 +1,66 @@
+{
+  "status": {
+    "code": 200,
+    "msgs": []
+  },
+  "data": {
+    "8fbe18e1-5d04-4b82-a0e9-1c386ed00de7": {
+      "status": {
+        "code": 200,
+        "msgs": []
+      },
+      "data": {
+        "id": "8fbe18e1-5d04-4b82-a0e9-1c386ed00de7",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Derbyshire County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443372914
+      }
+    },
+    "d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba": {
+      "status": {
+        "code": 200,
+        "msgs": []
+      },
+      "data": {
+        "id": "d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "name": "Leicestershire County, England"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-09-01",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported using Ordnance Survey data © Crown copyright and database right 2013"
+        ],
+        "last_edited_by": "System - Initial Import",
+        "last_edited_time": 1388443376231
+      }
+    }
+  }
+}

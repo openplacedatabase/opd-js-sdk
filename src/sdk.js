@@ -15,7 +15,8 @@ var defaultFrom = '-9999-01-01',
  * Constructor
  */ 
 var client = function(options){
-  this.host = options.host ? options.host : 'http://openplacedatabase.com';
+  options = options || {};
+  this.host = options.host ? options.host : 'http://www.openplacedatabase.com';
 };
 
 /**
@@ -38,6 +39,19 @@ client.prototype.getPlace = function(id, callback){
   this._get('/api/v0/places/' + id, callback);
 };
 
+/**
+ * Get multiple places by id
+ */
+client.prototype.getPlaces = function(ids, callback){
+  if(!_.isArray(ids)){
+    throw new Error('ids must be an array of strings');
+  }
+  this._get('/api/v0/places/' + ids.join(','), callback);
+};
+
+/**
+ * Get json from the specified URL
+ */
 client.prototype._get = function(url, callback){
   request(this.host + url) 
     .end(function(error, response){
@@ -46,7 +60,7 @@ client.prototype._get = function(url, callback){
       if(error || !data) {
         debug(url);
         debug(response.status);
-        debug(response.data || response.text);
+        debug(response.data || response.text || JSON.stringify(response));
       }
       _nextTick(function(){ callback(error, data); });
     });
