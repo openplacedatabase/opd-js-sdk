@@ -1,0 +1,24 @@
+{
+  "status": {
+    "code": 200,
+    "msgs": []
+  },
+  "data": {
+    "d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba": {
+      "status": {
+        "code": 400,
+        "msgs": [
+          "ids must match"
+        ]
+      },
+      "data": false
+    },
+    "a90af1cb-7e45-4235-aac0-fabf0233edb9": {
+      "status": {
+        "code": 200,
+        "msgs": []
+      },
+      "data": true
+    }
+  }
+}

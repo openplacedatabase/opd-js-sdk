@@ -19,6 +19,10 @@ var client = function(options){
   this.host = options.host ? options.host : 'http://www.openplacedatabase.com';
 };
 
+/******************
+ *     places     *
+ ******************/
+
 /**
  * Place search
  */
@@ -61,6 +65,31 @@ client.prototype.savePlace = function(id, place, callback){
   }
   this._post('/api/v0/places/' + id, place, callback);
 };
+
+/**
+ * Create multiple places
+ */
+client.prototype.savePlaces = function(places, callback){
+  _.each(places, function(place, id){
+    if(!_.isString(id)){
+      throw new Error('place id must be a string');
+    }
+    if(!_.isObject(place)){
+      throw new Error('place must be an object');
+    }
+  });
+  this._post('/api/v0/places', places, function(error, response){
+    var ids = {};
+    _.each(response, function(data, id){
+      ids[id] = data.status.code === 200;
+    });
+    callback(error, ids);
+  });
+};
+
+/******************
+ *    geojson     *
+ ******************/
 
 /**
  * Get a geojson

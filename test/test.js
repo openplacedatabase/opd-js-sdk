@@ -103,6 +103,32 @@ describe('sdk', function(){
     });
   });
   
+  if('savePlaces', function(done){
+    var postData = {
+      "a90af1cb-7e45-4235-aac0-fabf0233edb9": {
+        "id":"bad id",
+        "version":1,
+        "names":[],
+        "sources":[],
+        "geojsons":[]
+      },
+      "d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba": {
+        "id":"d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba",
+        "version":1,
+        "names":[],
+        "sources":[],
+        "geojsons":[]
+      }
+    };
+    var scope = postNockScope('/api/v0/places', postData, 200);
+    client.savePlaces(postData, function(error, data){
+      assert(!data['a90af1cb-7e45-4235-aac0-fabf0233edb9']);
+      assert(data['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba']);
+      scope.done();
+      done();
+    });
+  });
+  
   it('getGeoJSON', function(done){
     var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1');
     client.getGeoJSON('8fbe18e1-5d04-4b82-a0e9-1c386ed00de7', 1, function(error, geojson){
