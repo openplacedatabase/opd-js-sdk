@@ -3,21 +3,18 @@
 The javascript sdk for the Open Place Database API
 
 ##Install
+
 `npm install opd-sdk --save`
 
-##Notes
-* All returned or thrown errors are standard javascript error objects created via `new Error('message here')`
-* This library uses the `debug` module (found [here](https://npmjs.org/package/debug)). To enable it, set the `DEBUG` environment variable to `opd-sdk` (`DEBUG=opd-sdk`)
-* To view the schemas for places and geojsons, go [here](https://github.com/openplacedatabase/www).
-
-##Examples
-
 ###Requiring
+
 ````javascript
 var opdSDK = require('opd-sdk'),
     opdClient = opdSDK.createClient();
 ````
+
 Again, but with options
+
 ````javascript
 var opdSDK = require('opd-sdk'),
     opdClient = opdSDK.createClient({
@@ -25,60 +22,12 @@ var opdSDK = require('opd-sdk'),
     });
 ````
 
-###Get a place
-````javascript
-opdClient.getPlace("<place id>", function(error, data) {
-  if(error) {
-    // Whoops.
-    console.error(error);
-  } else {
-    // data is the place object. Mmmm, tasty.
-    doAwesomeStuff(data);
-  }
-});
-````
+## Notes
+* All returned or thrown errors are standard javascript error objects created via `new Error('message here')`
+* This library uses the `debug` module (found [here](https://npmjs.org/package/debug)). To enable it, set the `DEBUG` environment variable to `opd-sdk` (`DEBUG=opd-sdk`)
+* To view the schemas for places and geojsons, go [here](https://github.com/openplacedatabase/www).
 
-###Get many places
-````javascript
-var placesIWant = ["<place1>","<place2>","<place3>"];
-
-opdClient.getPlaces(placesIWant, function(error, data) {
-  if(error) {
-    // Whoops. Lets loop through and see which ones have an error
-    console.error(error);
-    for(var id in data) {
-      // Place will be either be null or an actual place
-      var place = data[id];
-    }
-  } else {
-    // data is an object where the keys are ids and the values are places
-    for(var id in data) {
-      var place = data[id];
-      consumeMoarPlaces(place);
-    }
-  }
-});
-````
-
-###Search for places
-````javascript
-
-opdClient.searchPlaces('My query String Here', function(error, data) {
-  if(error) {
-    // Whoops.
-    console.error(error);
-  } else {
-    // data is an array of places
-    for(var id in data) {
-      var place = data[id];
-      placesFound(place);
-    }
-  }
-});
-````
-
-
-##opd-sdk Methods
+## Methods
 
 ###createClient(options)
 ````javascript
