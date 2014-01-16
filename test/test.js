@@ -1,9 +1,10 @@
 var sdk = require(__dirname + '/../build/sdk.js'),
-    assert = require('assert'),
     debug = require('debug')('opd-sdk-test'),
-    fs = require('fs'),
-    nock = require('nock')('http://www.openplacedatabase.com').defaultReplyHeaders({'Content-Type':'application/json'});
+    _ = require('underscore')._,
+    assert = require('assert'),
+    fs = require('fs');
     
+var nock = require('nock')('http://www.openplacedatabase.com').defaultReplyHeaders({'Content-Type':'application/json'});
 var client = sdk.createClient();
     
 describe('sdk', function(){
@@ -53,7 +54,7 @@ describe('sdk', function(){
   it('getPlace 404', function(done){
     var scope = nock.get('/api/v0/places/foo').reply(404, '');
     client.getPlace('foo', function(error, place){
-      assert(typeof error !== 'undefined');
+      assert(!_.isUndefined(error));
       scope.done();
       done();
     });
@@ -73,6 +74,31 @@ describe('sdk', function(){
   it('getPlaces invalid ids parameter', function(){
     assert.throws(function(){
       client.getPlaces('', function(){});
+    });
+  });
+  
+  it('getGeoJSON', function(done){
+    var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1');
+    client.getGeoJSON('8fbe18e1-5d04-4b82-a0e9-1c386ed00de7', 1, function(error, geojson){
+      assert.equal(geojson.type, 'Polygon');
+      assert.equal(geojson.coordinates.length, 1);
+      assert.equal(geojson.coordinates[0].length, 5);
+      scope.done();
+      done();
+    });
+  });
+  
+  it('getGeoJSONs', function(done){
+    var ids = {
+      '8fbe18e1-5d04-4b82-a0e9-1c386ed00de7': [1],
+      'd8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba': [1],
+    };
+    var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1,d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba/1');
+    client.getGeoJSONs(ids, function(error, geojsons){
+      assert(_.isObject(geojsons['8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1']));
+      assert(_.isObject(geojsons['d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba/1']));
+      scope.done();
+      done();
     });
   });
 

@@ -50,6 +50,27 @@ client.prototype.getPlaces = function(ids, callback){
 };
 
 /**
+ * Get a geojson
+ */
+client.prototype.getGeoJSON = function(placeId, geojsonId, callback){
+  this._get('/api/v0/places/' + placeId + '/' + geojsonId, callback);
+};
+
+/**
+ * Get multiple geojsons
+ */
+client.prototype.getGeoJSONs = function(idMap, callback){
+  var ids = [];
+  _.each(idMap, function(geoIds, placeId){
+    _.each(geoIds, function(geoId){
+      ids.push(placeId + '/' + geoId);
+    });
+  });
+  debug('getGeoJSONs ids', JSON.stringify(ids));
+  this._get('/api/v0/places/' + ids.join(','), callback);
+};
+
+/**
  * Get json from the specified URL
  */
 client.prototype._get = function(url, callback){
@@ -60,7 +81,7 @@ client.prototype._get = function(url, callback){
       if(error || !data) {
         debug(url);
         debug(response.status);
-        debug(response.data || response.text || JSON.stringify(response));
+        debug(response.data || response.text);
       }
       _nextTick(function(){ callback(error, data); });
     });
