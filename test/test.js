@@ -101,6 +101,18 @@ describe('sdk', function(){
       done();
     });
   });
+  
+  it('getChanges', function(done){
+    var scope = getNockScope('/api/v0/changes?from=1389710140336&to=1389724640538');
+    client.getChanges(1389710140336, 1389724640538, function(error, changes){
+      assert.equal(changes.length, 6);
+      assert.equal(changes[0].timestamp, 1389710140336);
+      assert.equal(changes[5].timestamp, 1389724640538);
+      assert.equal(changes[0].id, '790af1cb-7e45-4235-aac0-fabf0233edb9');
+      scope.done();
+      done();
+    });
+  });
 
 });
 

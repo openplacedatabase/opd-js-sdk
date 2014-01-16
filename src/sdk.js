@@ -8,7 +8,7 @@ var defaultFrom = '-9999-01-01',
     defaultTo = '9999-12-31';
 
 /******************
- *     client
+ *     client     *
  ******************/
  
 /**
@@ -71,6 +71,17 @@ client.prototype.getGeoJSONs = function(idMap, callback){
 };
 
 /**
+ * Get a list of changes during the specified time interval
+ */
+client.prototype.getChanges = function(from, to, callback){
+  this._get('/api/v0/changes?from=' + from + '&to=' + to, callback);
+};
+
+/****************************
+ * client helpers and utils *
+ ****************************/ 
+
+/**
  * Get json from the specified URL
  */
 client.prototype._get = function(url, callback){
@@ -86,10 +97,6 @@ client.prototype._get = function(url, callback){
       _nextTick(function(){ callback(error, data); });
     });
 };
- 
-/******************
- *     utils
- ******************/ 
  
 function _nextTick(f){
   setTimeout(f, 0);
