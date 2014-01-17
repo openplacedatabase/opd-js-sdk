@@ -10,7 +10,6 @@
   "main": "src/sdk.js",
   "dependencies": {
     "superagent": "~0.16.0",
-    "geojson-assert": "0.0.2",
     "debug": "~0.7.4",
     "underscore": "~1.5.2"
   },

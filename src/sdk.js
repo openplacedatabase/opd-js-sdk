@@ -1,6 +1,5 @@
 var request = require('superagent'),
     debug = require('debug')('opd-sdk'),
-    geoAssert = require('geojson-assert'),
     querystring = require('querystring'),
     _ = require('underscore')._;
 
