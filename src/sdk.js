@@ -222,6 +222,7 @@ client.prototype._request = function(method, url, data, callback){
     r.send(data);
   }
   r.end(function(error, response){
+    var response = response || {};
     var error = error || response.error || undefined;
     var data = response.body && response.body.data ? response.body.data : undefined;
     if(error) {
