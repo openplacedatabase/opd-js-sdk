@@ -20,10 +20,6 @@ var client = function(options){
   this.password = options.password;
 };
 
-/******************
- *     places     *
- ******************/
-
 /**
  * Place search
  */
@@ -38,16 +34,16 @@ client.prototype.searchPlaces = function(search, options, callback){
 };
 
 /**
- * Get a place by id
+ * Get a place or geojson by id
  */
-client.prototype.getPlace = function(id, callback){
+client.prototype.get = function(id, callback){
   this._get('/api/v0/places/' + id, callback);
 };
 
 /**
- * Get multiple places by id
+ * Get multiple places or geojsons by id
  */
-client.prototype.getPlaces = function(ids, callback){
+client.prototype.getMulti = function(ids, callback){
   if(!_.isArray(ids)){
     throw new Error('ids must be an array of strings');
   }
@@ -55,9 +51,9 @@ client.prototype.getPlaces = function(ids, callback){
 };
 
 /**
- * Create a place
+ * Create or update a place or geojson
  */
-client.prototype.savePlace = function(id, place, callback){
+client.prototype.save = function(id, place, callback){
   if(!_.isString(id)){
     throw new Error('place id must be a string');
   }
@@ -68,9 +64,9 @@ client.prototype.savePlace = function(id, place, callback){
 };
 
 /**
- * Create multiple places
+ * Create or update multiple places or geojsons
  */
-client.prototype.savePlaces = function(places, callback){
+client.prototype.saveMulti = function(places, callback){
   _.each(places, function(place, id){
     if(!_.isString(id)){
       throw new Error('place id must be a string');
@@ -89,16 +85,16 @@ client.prototype.savePlaces = function(places, callback){
 };
 
 /**
- * Delete place
+ * Delete a place or geojson
  */
-client.prototype.deletePlace = function(id, callback){
+client.prototype.delete = function(id, callback){
   this._delete('/api/v0/places/' + id, callback);
 };
 
 /**
- * Delete multiple places
+ * Delete multiple places or geojsons
  */
-client.prototype.deletePlaces = function(ids, callback){
+client.prototype.deleteMulti = function(ids, callback){
   if(!_.isArray(ids)) {
     throw new Error('ids must be an array');
   }
@@ -111,75 +107,6 @@ client.prototype.deletePlaces = function(ids, callback){
   });
 };
 
-/******************
- *    geojson     *
- ******************/
-
-/**
- * Get a geojson
- */
-client.prototype.getGeoJSON = function(placeId, geojsonId, callback){
-  this._get('/api/v0/places/' + placeId + '/' + geojsonId, callback);
-};
-
-/**
- * Get multiple geojsons
- */
-client.prototype.getGeoJSONs = function(idMap, callback){
-  var ids = [];
-  _.each(idMap, function(geoIds, placeId){
-    _.each(geoIds, function(geoId){
-      ids.push(placeId + '/' + geoId);
-    });
-  });
-  debug('getGeoJSONs ids', JSON.stringify(ids));
-  this._get('/api/v0/places/' + ids.join(','), callback);
-};
-
-/**
- * Save a geojson
- */
-client.prototype.saveGeoJSON = function(placeId, geojsonId, geojson, callback){
-  this._post('/api/v0/places/' + placeId + '/' + geojsonId, geojson, callback);
-};
-
-/**
- * Save multiple geojsons
- */
-client.prototype.saveGeoJSONs = function(geojsons, callback){
-  var postData = {};
-  _.each(geojsons, function(geos, placeId){
-    _.each(geos, function(geo, geoId){
-      postData[placeId+'/'+geoId] = geo;
-    });
-  });
-  this._post('/api/v0/places', postData, callback);
-};
-
-/**
- * Delete a geojson
- */
-client.prototype.deleteGeoJSON = function(placeId, geojsonId, callback){
-  this._delete('/api/v0/places/' + placeId + '/' + geojsonId, callback);
-};
-
-/**
- * Delete multiple geojsons
- */
-client.prototype.deleteGeoJSONs = function(idMap, callback){
-  var ids = [];
-  _.each(idMap, function(geoIds, placeId){
-    _.each(geoIds, function(geoId){
-      ids.push(placeId + '/' + geoId);
-    });
-  });
-  this._delete('/api/v0/places/' + ids.join(','), callback);
-};
-
-/******************
- *    changes     *
- ******************/
-
 /**
  * Get a list of changes during the specified time interval
  */
@@ -188,7 +115,7 @@ client.prototype.getChanges = function(from, to, callback){
 };
 
 /****************************
- * client helpers and utils *
+ *    helpers and utils     *
  ****************************/ 
 
 /**

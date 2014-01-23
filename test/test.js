@@ -9,8 +9,8 @@ var client = sdk.createClient({
   username: 'foo',
   password: 'bar'
 });
-    
-describe('sdk', function(){
+
+describe('search', function(){
 
   it('searchPlaces', function(done){
     var scope = getNockScope('/api/v0/search/places?s=England');
@@ -45,9 +45,13 @@ describe('sdk', function(){
     });
   });
 
-  it('getPlace', function(done){
+});
+
+describe('get', function(){
+
+  it('get place', function(done){
     var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7');
-    client.getPlace('8fbe18e1-5d04-4b82-a0e9-1c386ed00de7', function(error, place){
+    client.get('8fbe18e1-5d04-4b82-a0e9-1c386ed00de7', function(error, place){
       assert(_.isUndefined(error));
       assert.equal(place.id, '8fbe18e1-5d04-4b82-a0e9-1c386ed00de7');
       scope.done();
@@ -55,19 +59,19 @@ describe('sdk', function(){
     });
   });
   
-  it('getPlace 404', function(done){
+  it('get place 404', function(done){
     var scope = nock.get('/api/v0/places/foo').reply(404, '');
-    client.getPlace('foo', function(error, place){
+    client.get('foo', function(error, place){
       assert(!_.isUndefined(error));
       scope.done();
       done();
     });
   });
   
-  it('getPlaces', function(done){
+  it('get multiple places', function(done){
     var ids = ['8fbe18e1-5d04-4b82-a0e9-1c386ed00de7','d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba'],
         scope = getNockScope('/api/v0/places/' + ids.join(','));
-    client.getPlace(ids, function(error, places){
+    client.getMulti(ids, function(error, places){
       assert.equal(places[ids[0]].data.id, ids[0]);
       assert.equal(places[ids[1]].data.id, ids[1]);
       scope.done();
@@ -75,13 +79,42 @@ describe('sdk', function(){
     });
   });
   
-  it('getPlaces invalid ids parameter', function(){
+  it('get places invalid ids parameter', function(){
     assert.throws(function(){
-      client.getPlaces('', function(){});
+      client.getMulti('', function(){});
+    });
+  });
+
+  it('get GeoJSON', function(done){
+    var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1');
+    client.get('8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1', function(error, geojson){
+      assert.equal(geojson.type, 'Polygon');
+      assert.equal(geojson.coordinates.length, 1);
+      assert.equal(geojson.coordinates[0].length, 5);
+      scope.done();
+      done();
     });
   });
   
-  it('savePlace', function(done){
+  it('get multiple GeoJSONs', function(done){
+    var ids = [
+      '8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1',
+      'd8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba/1'
+    ];
+    var scope = getNockScope('/api/v0/places/' + ids.join(','));
+    client.getMulti(ids, function(error, geojsons){
+      assert(_.isObject(geojsons[ids[0]]));
+      assert(_.isObject(geojsons[ids[1]]));
+      scope.done();
+      done();
+    });
+  });
+
+});
+
+describe('save', function(){
+  
+  it('save place', function(done){
     var postData = {
       "id":"a90af1cb-7e45-4235-aac0-fabf0233edb9",
       "version":1,
@@ -90,23 +123,23 @@ describe('sdk', function(){
       "geojsons":[]
     };
     var scope = postNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb9', postData, 200);
-    client.savePlace('a90af1cb-7e45-4235-aac0-fabf0233edb9', postData, function(error){
+    client.save('a90af1cb-7e45-4235-aac0-fabf0233edb9', postData, function(error){
       assert(_.isUndefined(error));
       scope.done();
       done();
     });
   });
   
-  it('savePlace 400', function(done){
+  it('save place 400', function(done){
     var scope = postNockScope('/api/v0/places/bad', {id:'bad'}, 400);
-    client.savePlace('bad', {id:'bad'}, function(error){
+    client.save('bad', {id:'bad'}, function(error){
       assert(!_.isUndefined(error));
       scope.done();
       done();
     });
   });
   
-  if('savePlaces', function(done){
+  if('save multiple places', function(done){
     var postData = {
       "a90af1cb-7e45-4235-aac0-fabf0233edb9": {
         "id":"bad id",
@@ -124,7 +157,7 @@ describe('sdk', function(){
       }
     };
     var scope = postNockScope('/api/v0/places', postData);
-    client.savePlaces(postData, function(error, data){
+    client.saveMulti(postData, function(error, data){
       assert(!data['a90af1cb-7e45-4235-aac0-fabf0233edb9']);
       assert(data['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba']);
       scope.done();
@@ -132,58 +165,13 @@ describe('sdk', function(){
     });
   });
   
-  it('deletePlace', function(done){
-    var scope = deleteNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb9');
-    client.deletePlace('a90af1cb-7e45-4235-aac0-fabf0233edb9', function(error){
-      assert(_.isUndefined(error));
-      scope.done();
-      done();
-    });
-  });
-  
-  it('deletePlaces', function(done){
-    var ids = ['a90af1cb-7e45-4235-aac0-fabf0233edb9','d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba'];
-    var scope = deleteNockScope('/api/v0/places/' + ids.join(','));
-    client.deletePlaces(ids, function(error, data){
-      assert(data['a90af1cb-7e45-4235-aac0-fabf0233edb9']);
-      assert(data['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba']);
-      scope.done();
-      done();
-    });
-  });
-  
-  it('getGeoJSON', function(done){
-    var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1');
-    client.getGeoJSON('8fbe18e1-5d04-4b82-a0e9-1c386ed00de7', 1, function(error, geojson){
-      assert.equal(geojson.type, 'Polygon');
-      assert.equal(geojson.coordinates.length, 1);
-      assert.equal(geojson.coordinates[0].length, 5);
-      scope.done();
-      done();
-    });
-  });
-  
-  it('getGeoJSONs', function(done){
-    var ids = {
-      '8fbe18e1-5d04-4b82-a0e9-1c386ed00de7': [1],
-      'd8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba': [1]
-    };
-    var scope = getNockScope('/api/v0/places/8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1,d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba/1');
-    client.getGeoJSONs(ids, function(error, geojsons){
-      assert(_.isObject(geojsons['8fbe18e1-5d04-4b82-a0e9-1c386ed00de7/1']));
-      assert(_.isObject(geojsons['d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba/1']));
-      scope.done();
-      done();
-    });
-  });
-  
-  it('saveGeoJSON', function(done){
+  it('save GeoJSON', function(done){
     var geojson = {
       "type":"Point",
       "coordinates":[0,0]
     };
     var scope = postNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb/1');
-    client.saveGeoJSON('a90af1cb-7e45-4235-aac0-fabf0233edb', '1', geojson, function(error){
+    client.save('a90af1cb-7e45-4235-aac0-fabf0233edb/1', geojson, function(error){
       assert(_.isUndefined(error));
       scope.done();
       done();
@@ -193,19 +181,7 @@ describe('sdk', function(){
   // This is just testing that the post data is properly
   // formatted because the url conflicts with savePlaces
   // so we can't really test the format of the response
-  it('saveGeoJSONs', function(done){
-    var geos = {
-      "a90af1cb-7e45-4235-aac0-fabf0233edb": {
-        "1": {
-          "type":"Point",
-          "coordinates":[0,0]
-        },
-        "2": {
-          "type":"Point",
-          "coordinates":[1,1]
-        }
-      }
-    };
+  it('save GeoJSONs', function(done){
     var postData = {
       "a90af1cb-7e45-4235-aac0-fabf0233edb/1": {
         "type":"Point",
@@ -217,31 +193,60 @@ describe('sdk', function(){
       }
     };
     var scope = postNockScope('/api/v0/places', postData);
-    client.saveGeoJSONs(geos, function(error, response){
+    client.saveMulti(postData, function(error, response){
+      assert(_.isUndefined(error));
+      scope.done();
+      done();
+    });
+  });
+
+});
+
+describe('delete', function(){
+  
+  it('delete place', function(done){
+    var scope = deleteNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb9');
+    client.delete('a90af1cb-7e45-4235-aac0-fabf0233edb9', function(error){
       assert(_.isUndefined(error));
       scope.done();
       done();
     });
   });
   
-  it('deleteGeoJSON', function(done){
+  it('delete multiple places', function(done){
+    var ids = ['a90af1cb-7e45-4235-aac0-fabf0233edb9','d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba'];
+    var scope = deleteNockScope('/api/v0/places/' + ids.join(','));
+    client.deleteMulti(ids, function(error, data){
+      assert(data['a90af1cb-7e45-4235-aac0-fabf0233edb9']);
+      assert(data['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba']);
+      scope.done();
+      done();
+    });
+  });
+  
+  it('delete GeoJSON', function(done){
     var scope = deleteNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb9/1');
-    client.deleteGeoJSON('a90af1cb-7e45-4235-aac0-fabf0233edb9', '1', function(error){
+    client.delete('a90af1cb-7e45-4235-aac0-fabf0233edb9/1', function(error){
       assert(_.isUndefined(error));
       scope.done();
       done();
     });
   });
   
-  it('deleteGeoJSONs', function(done){
-    var scope = deleteNockScope('/api/v0/places/a90af1cb-7e45-4235-aac0-fabf0233edb9/1,a90af1cb-7e45-4235-aac0-fabf0233edb9/2');
-    client.deleteGeoJSONs({'a90af1cb-7e45-4235-aac0-fabf0233edb9':['1','2']}, function(error, data){
-      assert(data['a90af1cb-7e45-4235-aac0-fabf0233edb9/1']);
-      assert(data['a90af1cb-7e45-4235-aac0-fabf0233edb9/2']);
+  it('delete GeoJSONs', function(done){
+    var ids = ['a90af1cb-7e45-4235-aac0-fabf0233edb9/1','a90af1cb-7e45-4235-aac0-fabf0233edb9/2'],
+        scope = deleteNockScope('/api/v0/places/' + ids.join(','));
+    client.deleteMulti(ids, function(error, data){
+      assert(data[ids[0]]);
+      assert(data[ids[1]]);
       scope.done();
       done();
     });
   });
+
+});
+
+describe('change', function(){
   
   it('getChanges', function(done){
     var scope = getNockScope('/api/v0/changes?from=1389710140336&to=1389724640538');
