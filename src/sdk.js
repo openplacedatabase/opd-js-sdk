@@ -15,7 +15,7 @@ var defaultFrom = '-9999-01-01',
  */ 
 var client = function(options){
   options = options || {};
-  this.host = options.host ? options.host : 'http://www.openplacedatabase.com';
+  this.host = options.host ? options.host : 'http://www.openplacedatabase.org';
   this.username = options.username;
   this.password = options.password;
 };
