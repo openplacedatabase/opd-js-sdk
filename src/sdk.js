@@ -1,6 +1,7 @@
 var request = require('superagent'),
     debug = require('debug')('opd-sdk'),
     querystring = require('querystring'),
+    validate = require('opd-validate'),
     _ = require('underscore')._;
 
 var defaultFrom = '-9999-01-01',
@@ -53,29 +54,53 @@ client.prototype.getMulti = function(ids, callback){
 /**
  * Create or update a place or geojson
  */
-client.prototype.save = function(id, place, callback){
+client.prototype.save = function(id, object, callback){
   if(!_.isString(id)){
-    throw new Error('place id must be a string');
+    throw new Error('id must be a string');
   }
-  if(!_.isObject(place)){
-    throw new Error('place must be an object');
+  if(!_.isObject(object)){
+    throw new Error('data must be an object');
   }
-  this._post('/api/v0/places/' + id, place, callback);
+  try {
+    if(id.indexOf('/') !== -1){
+      validate.geojson(object);
+    } else {
+      validate.place(object);
+    }
+    this._post('/api/v0/places/' + id, object, callback);
+  } catch(e) {
+    callback(e);
+  }
 };
 
 /**
  * Create or update multiple places or geojsons
  */
-client.prototype.saveMulti = function(places, callback){
-  _.each(places, function(place, id){
+client.prototype.saveMulti = function(objects, callback){
+  var errors = {}, hasErrors = false;
+  _.each(objects, function(object, id){
     if(!_.isString(id)){
-      throw new Error('place id must be a string');
+      throw new Error('id must be a string');
     }
-    if(!_.isObject(place)){
-      throw new Error('place must be an object');
+    if(!_.isObject(object)){
+      throw new Error('data must be an object');
+    }
+    try {
+      if(id.indexOf('/') !== -1){
+        validate.geojson(object);
+      } else {
+        validate.place(object);
+      }
+      errors[id] = null;
+    } catch(e) {
+      errors[id] = e;
+      hasErrors = true;
     }
   });
-  this._post('/api/v0/places', places, function(error, response){
+  if(hasErrors){
+    callback(new Error('Some objects are invalid'), errors);
+  }
+  this._post('/api/v0/places', objects, function(error, response){
     var ids = {};
     _.each(response, function(data, id){
       ids[id] = data.status.code === 200;

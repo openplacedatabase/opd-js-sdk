@@ -1,10 +1,10 @@
-var sdk = require(__dirname + '/../build/sdk.js'),
+var sdk = require(__dirname + '/../src/sdk.js'),
     debug = require('debug')('opd-sdk-test'),
     _ = require('underscore')._,
     assert = require('assert'),
     fs = require('fs');
     
-var nock = require('nock')('http://www.openplacedatabase.com').defaultReplyHeaders({'Content-Type':'application/json'});
+var nock = require('nock')('http://www.openplacedatabase.org').defaultReplyHeaders({'Content-Type':'application/json'});
 var client = sdk.createClient({
   username: 'foo',
   password: 'bar'
@@ -130,11 +130,9 @@ describe('save', function(){
     });
   });
   
-  it('save place 400', function(done){
-    var scope = postNockScope('/api/v0/places/bad', {id:'bad'}, 400);
+  it('save invalid place', function(done){
     client.save('bad', {id:'bad'}, function(error){
       assert(!_.isUndefined(error));
-      scope.done();
       done();
     });
   });
