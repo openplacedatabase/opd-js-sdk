@@ -2,6 +2,8 @@
 
 The javascript sdk for the Open Place Database API
 
+[![NPM version](https://badge.fury.io/js/opd-sdk.png)](http://badge.fury.io/js/opd-sdk)
+
 ##Install
 
 `npm install opd-sdk --save`
