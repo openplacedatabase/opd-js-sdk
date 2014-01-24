@@ -71,8 +71,10 @@ describe('get', function(){
   it('get multiple places', function(done){
     var ids = ['8fbe18e1-5d04-4b82-a0e9-1c386ed00de7','d8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba'],
         scope = getNockScope('/api/v0/places/' + ids.join(','));
-    client.getMulti(ids, function(error, places){
+    client.getMulti(ids, function(places){
+      assert(!places[ids[0]].error);
       assert.equal(places[ids[0]].data.id, ids[0]);
+      assert(!places[ids[1]].error);
       assert.equal(places[ids[1]].data.id, ids[1]);
       scope.done();
       done();
@@ -102,8 +104,10 @@ describe('get', function(){
       'd8e30c45-9470-49d3-ac9d-e7f7b7b2e1ba/1'
     ];
     var scope = getNockScope('/api/v0/places/' + ids.join(','));
-    client.getMulti(ids, function(error, geojsons){
+    client.getMulti(ids, function(geojsons){
+      assert(!geojsons[ids[0]].error);
       assert(_.isObject(geojsons[ids[0]]));
+      assert(!geojsons[ids[1]].error);
       assert(_.isObject(geojsons[ids[1]]));
       scope.done();
       done();
@@ -155,9 +159,11 @@ describe('save', function(){
       }
     };
     var scope = postNockScope('/api/v0/places', postData);
-    client.saveMulti(postData, function(error, data){
-      assert(!data['a90af1cb-7e45-4235-aac0-fabf0233edb9']);
-      assert(data['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba']);
+    client.saveMulti(postData, function(data){
+      assert(data['a90af1cb-7e45-4235-aac0-fabf0233edb9'].error instanceof Error)
+      assert(!data['a90af1cb-7e45-4235-aac0-fabf0233edb9'].data);
+      assert(!data['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba'].error);
+      assert(data['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba'].data);
       scope.done();
       done();
     });
@@ -191,8 +197,8 @@ describe('save', function(){
       }
     };
     var scope = postNockScope('/api/v0/places', postData);
-    client.saveMulti(postData, function(error, response){
-      assert(_.isUndefined(error));
+    client.saveMulti(postData, function(response){
+      assert(response);
       scope.done();
       done();
     });
@@ -214,9 +220,11 @@ describe('delete', function(){
   it('delete multiple places', function(done){
     var ids = ['a90af1cb-7e45-4235-aac0-fabf0233edb9','d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba'];
     var scope = deleteNockScope('/api/v0/places/' + ids.join(','));
-    client.deleteMulti(ids, function(error, data){
-      assert(data['a90af1cb-7e45-4235-aac0-fabf0233edb9']);
-      assert(data['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba']);
+    client.deleteMulti(ids, function(response){
+      assert(response['a90af1cb-7e45-4235-aac0-fabf0233edb9'].data);
+      assert(response['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba'].data);
+      assert(!response['a90af1cb-7e45-4235-aac0-fabf0233edb9'].error);
+      assert(!response['d8e35c45-9470-49d3-ac9d-e7f7b7b2e1ba'].error);
       scope.done();
       done();
     });
@@ -234,9 +242,11 @@ describe('delete', function(){
   it('delete GeoJSONs', function(done){
     var ids = ['a90af1cb-7e45-4235-aac0-fabf0233edb9/1','a90af1cb-7e45-4235-aac0-fabf0233edb9/2'],
         scope = deleteNockScope('/api/v0/places/' + ids.join(','));
-    client.deleteMulti(ids, function(error, data){
-      assert(data[ids[0]]);
-      assert(data[ids[1]]);
+    client.deleteMulti(ids, function(response){
+      assert(response[ids[0]].data);
+      assert(response[ids[1]].data);
+      assert(!response[ids[0]].error);
+      assert(!response[ids[1]].error);
       scope.done();
       done();
     });

@@ -48,7 +48,9 @@ client.prototype.getMulti = function(ids, callback){
   if(!_.isArray(ids)){
     throw new Error('ids must be an array of strings');
   }
-  this._get('/api/v0/places/' + ids.join(','), callback);
+  this._get('/api/v0/places/' + ids.join(','), function(error, response){
+    _multiCallback(error, response, callback);
+  });
 };
 
 /**
@@ -77,7 +79,11 @@ client.prototype.save = function(id, object, callback){
  * Create or update multiple places or geojsons
  */
 client.prototype.saveMulti = function(objects, callback){
-  var errors = {}, hasErrors = false;
+  
+  // Validate objects. Seperate invalid ones from the
+  // valide ones. Send valid ones to server and interleave
+  // invalid ones with the results.
+  var valid = {}, errors = {};
   _.each(objects, function(object, id){
     if(!_.isString(id)){
       throw new Error('id must be a string');
@@ -91,21 +97,17 @@ client.prototype.saveMulti = function(objects, callback){
       } else {
         validate.place(object);
       }
-      errors[id] = null;
+      valid[id] = object;
     } catch(e) {
-      errors[id] = e;
-      hasErrors = true;
+      errors[id] = {
+        error: e,
+        data: null
+      };
     }
   });
-  if(hasErrors){
-    callback(new Error('Some objects are invalid'), errors);
-  }
-  this._post('/api/v0/places', objects, function(error, response){
-    var ids = {};
-    _.each(response, function(data, id){
-      ids[id] = data.status.code === 200;
-    });
-    callback(error, ids);
+
+  this._post('/api/v0/places', valid, function(error, response){
+    _multiCallback(error, response, callback, errors);
   });
 };
 
@@ -124,11 +126,7 @@ client.prototype.deleteMulti = function(ids, callback){
     throw new Error('ids must be an array');
   }
   this._delete('/api/v0/places/' + ids.join(','), function(error, response){
-    var ids = {};
-    _.each(response, function(data, id){
-      ids[id] = data.status.code === 200;
-    });
-    callback(error, ids);
+    _multiCallback(error, response, callback);
   });
 };
 
@@ -174,6 +172,8 @@ client.prototype._request = function(method, url, data, callback){
   }
   r.end(function(error, response){
     var response = response || {};
+    // response.error is an error object when the HTTP
+    // status code is a 4xx or 5xx
     var error = error || response.error || undefined;
     var data = response.body && response.body.data ? response.body.data : undefined;
     if(error) {
@@ -184,6 +184,29 @@ client.prototype._request = function(method, url, data, callback){
     _nextTick(function(){ callback(error, data); });
   });
 };
+
+/**
+ * Callback used by Multi methods that
+ * generates the proper response format
+ */
+function _multiCallback(serverError, serverResponse, callback, interleave){
+  var clientResponse = {};
+  _.each(serverResponse, function(data, id){
+    var thisError = serverError;
+    if(!thisError && data.status.code !== 200){
+      thisError = new Error(data.status.msgs.join('. '));
+      thisError.code = data.status.code;
+    }
+    clientResponse[id] = {
+      error:  thisError,
+      data: data.data
+    };
+  });
+  if(interleave){
+    _.extend(clientResponse, interleave);
+  }
+  callback(clientResponse);
+}
  
 /**
  * Call the function on the next tick.

@@ -105,24 +105,18 @@ Get several places or geojson.
 ````javascript
 var stuffIWant = ["<place1>","<place2>","<geojsonId>"];
 
-opdClient.getMulti(stuffIWant, function(error, data) {
-  if(error) {
-    // Whoops. Lets loop through and see which ones have an error
-    console.error(error);
-    for(var id in data) {
-      // Will be either be null or a place or geojson
-      var place = data[id];
+opdClient.getMulti(stuffIWant, function(response) {
+  // Response will be an object with keys matching
+  // the requested ids. The values will be {error, data}
+  // objects.
+  for(var id in data) {
+    // The error property will either be
+    // an Error objects or null
+    if(data[id].error){
+      handleError(id, data[id].error);
+    } else {
+      doStuff(id, data[id].data);
     }
-  } else {
-    // data is an object where the keys are ids and the values are places or geojsons
-    for(var id in data) {
-      var info = data[id];
-      consumeMoarStuff(info);
-    }
-
-    // We can also directly access the place we want
-    var thisOne = data[placeId];
-
   }
 });
 ````
@@ -153,20 +147,18 @@ var dataToSave = {
   '<geojsonid1>': geojsonObject
 };
 
-opdClient.saveMulti(dataToSave, function(error, data) {
-  if(error) {
-    // Whoops. data has a key for every id, and a true|false if the save was successful
-    for(var id in data) {
-      if(data[id] === true) {
-        // We successfullly saved this one
-      } else {
-        // We had better retry this one
-        retries.push(id);
-      }
+opdClient.saveMulti(dataToSave, function(response) {
+  // Response will be an object with keys matching
+  // the requested ids. The values will be {error, data}
+  // objects.
+  for(var id in data) {
+    // The error property will either be
+    // an Error objects or null
+    if(data[id].error){
+      // Save failed
+    } else {
+      // Save successfull
     }
-    console.error(error);
-  } else {
-    // Save successful. The data is saved, nap time.
   }
 });
 ````
@@ -197,19 +189,17 @@ var places = [
 ];
 
 opdClient.deleteMulti(places, function(error, data) {
-  if(error) {
-    // Whoops. data has a key for every id, and a true|false if the delete was successful
-    for(var id in data) {
-      if(data[id] === true) {
-        // We successfullly deleted this one
-      } else {
-        // We had better retry this one
-        retries.push(id);
-      }
+  // Response will be an object with keys matching
+  // the requested ids. The values will be {error, data}
+  // objects.
+  for(var id in data) {
+    // The error property will either be
+    // an Error objects or null
+    if(data[id].error){
+      // Delete failed
+    } else {
+      // Delete successfull
     }
-    console.error(error);
-  } else {
-    // Delete successful. Why are you deleting this place anyway?
   }
 });
 ````
