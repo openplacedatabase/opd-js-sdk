@@ -44,19 +44,13 @@ var opdSDK = require('opd-sdk'),
     });
 ````
 
-####url
-
-The base url to use for the requests. Make sure to include the port if you are running locally.
+* __url__: The base url to use for the requests. Make sure to include the port if you are running locally.
 Default: `http://www.openplacedatabase.com/api/`
 
-####username
-
-The username to use for authentication. Only required for `deletePlace(s)` and `savePlace(s)`.
+* __username__: The username to use for authentication. Only required for `deletePlace(s)` and `savePlace(s)`.
 Default: `null`
 
-####password
-
-The password to use for authentication. Only required for `deletePlace(s)` and `savePlace(s)`.
+* __password__: The password to use for authentication. Only required for `deletePlace(s)` and `savePlace(s)`.
 Default: `null`
 
 ###validate
