@@ -223,5 +223,6 @@ function _nextTick(f){
 module.exports = {
   createClient: function(options){
     return new client(options);
-  }
+  },
+  validate: validate
 };

@@ -270,6 +270,30 @@ describe('change', function(){
 
 });
 
+// We're not testing that validation works
+// because the package has it's own tests.
+// We're just testing that it gets exposed.
+describe('validate', function(){
+  it('place', function(){
+    assert(_.isFunction(sdk.validate.place));
+  })
+  it('placeName', function(){
+    assert(_.isFunction(sdk.validate.placeName));
+  })
+  it('placeGeoJSON', function(){
+    assert(_.isFunction(sdk.validate.placeGeoJSON));
+  })
+  it('placeSource', function(){
+    assert(_.isFunction(sdk.validate.placeSource));
+  })
+  it('date', function(){
+    assert(_.isFunction(sdk.validate.date));
+  })
+  it('geojson', function(){
+    assert(_.isFunction(sdk.validate.geojson));
+  })
+});
+
 /**
  * Helper functions for getting a nock scope
  */

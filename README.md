@@ -59,6 +59,23 @@ Default: `null`
 The password to use for authentication. Only required for `deletePlace(s)` and `savePlace(s)`.
 Default: `null`
 
+###validate
+
+Validate OPD data via the [opd-validate](https://github.com/openplacedatabase/validate) library. Read it's docs for more information.
+
+````javascript
+var opdSDK = require('opd-sdk');
+
+try {
+  opdSDK.validate.place(placeObj);
+  opdSDK.validate.geojson(geojson);
+} catch(e) {
+  // Validation failed
+}
+````
+
+## Client Methods
+
 ###searchPlaces(query, [options], callback(error, data))
 
 Find some historical places. Booyah. Note that `options` is optional.
