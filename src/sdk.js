@@ -49,7 +49,7 @@ client.prototype.getMulti = function(ids, callback){
     throw new Error('ids must be an array of strings');
   }
   this._get('/api/v0/places/' + ids.join(','), function(error, response){
-    _multiCallback(error, response, callback);
+    _multiCallback(error, response, callback, null, ids);
   });
 };
 
@@ -107,7 +107,7 @@ client.prototype.saveMulti = function(objects, callback){
   });
 
   this._post('/api/v0/places', valid, function(error, response){
-    _multiCallback(error, response, callback, errors);
+    _multiCallback(error, response, callback, errors, _.keys(valid));
   });
 };
 
@@ -126,7 +126,7 @@ client.prototype.deleteMulti = function(ids, callback){
     throw new Error('ids must be an array');
   }
   this._delete('/api/v0/places/' + ids.join(','), function(error, response){
-    _multiCallback(error, response, callback);
+    _multiCallback(error, response, callback, null, ids);
   });
 };
 
@@ -192,11 +192,13 @@ client.prototype._request = function(method, url, data, callback){
  * Callback used by Multi methods that
  * generates the proper response format
  */
-function _multiCallback(serverError, serverResponse, callback, interleave){
+function _multiCallback(serverError, serverResponse, callback, interleave, requestedIds){
   var clientResponse = {};
+  
+  // Handle response errors
   _.each(serverResponse, function(data, id){
     var thisError = serverError;
-    if(!thisError && data.status.code !== 200){
+    if(serverError && data.status.code !== 200){
       thisError = new Error(data.status.msgs.join('. '));
       thisError.code = data.status.code;
     }
@@ -205,9 +207,24 @@ function _multiCallback(serverError, serverResponse, callback, interleave){
       data: data.data
     };
   });
+  
+  // Handle request level errors
+  if(serverError && !serverResponse){
+    _.each(requestedIds, function(id){
+      if(_.isUndefined(clientResponse[id])){
+        clientResponse[id] = {
+          error: serverError,
+          data: null
+        };
+      } 
+    });
+  }
+  
+  // Interleave validation errors
   if(interleave){
     _.extend(clientResponse, interleave);
   }
+  
   callback(clientResponse);
 }
  

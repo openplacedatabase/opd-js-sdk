@@ -294,7 +294,7 @@ describe('validate', function(){
   })
 });
 
-describe('misc', function(){
+describe('error handling', function(){
   
   // An error should be returned when we fail
   // to connect to the host
@@ -321,6 +321,78 @@ describe('misc', function(){
     client.get('0229d6e3-d5ea-4daa-b5dd-b85a71b7e4f1', function(error, data){
       assert(!_.isUndefined(error));
       assert(_.isUndefined(data));
+      done();
+    });
+  });
+  
+  // Batch GET errors
+  it('Multi GET errors', function(done){
+    var client = sdk.createClient({
+      host: 'http://nadaqueverto.orgnet',
+      username: 'foo',
+      password: 'bar'
+    });
+    client.getMulti(['foobar'], function(response){
+      assert(!_.isUndefined(response));
+      assert(!_.isUndefined(response.foobar));
+      assert(_.isObject(response.foobar.error));
+      assert(_.isNull(response.foobar.data));
+      done();
+    });
+  });
+  
+  // Batch POST errors
+  it('Multi POST errors', function(done){
+    var client = sdk.createClient({
+      host: 'http://nadaqueverto.orgnet',
+      username: 'foo',
+      password: 'bar'
+    });
+    var postData = {
+      'foobar': { 'invalid' : 'data' },
+      '0229d6e3-d5ea-4daa-b5dd-b85a71b7e4f1': {
+        "id": "0229d6e3-d5ea-4daa-b5dd-b85a71b7e4f1",
+        "version": 1,
+        "names": [
+          {
+            "from": "2013-12-31",
+            "to": "9999-12-31",
+            "name": "Georgia"
+          }
+        ],
+        "geojsons": [
+          {
+            "from": "2013-12-31",
+            "to": "9999-12-31",
+            "id": "1"
+          }
+        ],
+        "sources": [
+          "Initially imported from Natural Earth."
+        ]
+      }
+    };
+    client.saveMulti(postData, function(response){
+      assert(!_.isUndefined(response));
+      assert(!_.isUndefined(response.foobar));
+      assert(_.isObject(response.foobar.error));
+      assert(_.isNull(response.foobar.data));
+      done();
+    });
+  });
+  
+  // Batch DELETE errors
+  it('Multi DELETE errors', function(done){
+    var client = sdk.createClient({
+      host: 'http://nadaqueverto.orgnet',
+      username: 'foo',
+      password: 'bar'
+    });
+    client.deleteMulti(['foobar'], function(response){
+      assert(!_.isUndefined(response));
+      assert(!_.isUndefined(response.foobar));
+      assert(_.isObject(response.foobar.error));
+      assert(_.isNull(response.foobar.data));
       done();
     });
   });
