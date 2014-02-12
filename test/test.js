@@ -294,6 +294,39 @@ describe('validate', function(){
   })
 });
 
+describe('misc', function(){
+  
+  // An error should be returned when we fail
+  // to connect to the host
+  it('network error', function(done){
+    var client = sdk.createClient({
+      host: 'http://nadaqueverto.orgnet',
+      username: 'foo',
+      password: 'bar'
+    });
+    client.get('foobar', function(error, data){
+      assert(!_.isUndefined(error));
+      assert(_.isUndefined(data));
+      done();
+    });
+  });
+  
+  // Test GET redirects; should cause an error
+  it('GET redirect', function(done){
+    var client = sdk.createClient({
+      host: 'http://www.openplacedatabase.com',
+      username: 'foo',
+      password: 'bar'
+    });
+    client.get('0229d6e3-d5ea-4daa-b5dd-b85a71b7e4f1', function(error, data){
+      assert(!_.isUndefined(error));
+      assert(_.isUndefined(data));
+      done();
+    });
+  });
+  
+});
+
 /**
  * Helper functions for getting a nock scope
  */

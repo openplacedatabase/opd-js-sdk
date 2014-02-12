@@ -38,8 +38,8 @@ var opdSDK = require('opd-sdk'),
 // Overwrite ALL the options. Bwahahahaha.
 var opdSDK = require('opd-sdk'),
     opdClient = opdSDK.createClient({
-      host:'http://localhost:8080/api',
-      username:'nananananananananananananananana',
+      host: 'http://localhost:8080/api',
+      username: 'nananananananananananananananana',
       password: 'BATMAAAN'
     });
 ````

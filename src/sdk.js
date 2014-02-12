@@ -166,7 +166,7 @@ client.prototype._delete = function(url, callback){
  * Generic function for HTTP requests
  */
 client.prototype._request = function(method, url, data, callback){
-  var r = request(method, this.host + url).auth(this.username, this.password);
+  var r = request(method, this.host + url).auth(this.username, this.password).redirects(0);
   if(data){
     r.send(data);
   }
@@ -175,12 +175,15 @@ client.prototype._request = function(method, url, data, callback){
     // response.error is an error object when the HTTP
     // status code is a 4xx or 5xx
     var error = error || response.error || undefined;
-    var data = response.body && response.body.data ? response.body.data : undefined;
-    if(error) {
-      debug(url);
-      debug(response.status);
-      debug(response.data || response.text);
+    if(response.statusType === 3){
+      error = new Error('Redirects have been disabled');
     }
+    var data = response.body && response.body.data ? response.body.data : undefined;
+    debug(url);
+    debug(response.status);
+    debug(response.statusType);
+    debug(response.type);
+    debug(response.data);
     _nextTick(function(){ callback(error, data); });
   });
 };
