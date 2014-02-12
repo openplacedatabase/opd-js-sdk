@@ -38,13 +38,13 @@ var opdSDK = require('opd-sdk'),
 // Overwrite ALL the options. Bwahahahaha.
 var opdSDK = require('opd-sdk'),
     opdClient = opdSDK.createClient({
-      url:'http://localhost:8080/api',
+      host:'http://localhost:8080/api',
       username:'nananananananananananananananana',
       password: 'BATMAAAN'
     });
 ````
 
-* __url__: The base url to use for the requests. Make sure to include the port if you are running locally.
+* __host__: The base url to use for the requests. Make sure to include the port if you are running locally.
 Default: `http://www.openplacedatabase.com/api/`
 
 * __username__: The username to use for authentication. Only required for `deletePlace(s)` and `savePlace(s)`.
