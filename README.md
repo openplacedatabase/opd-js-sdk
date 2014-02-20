@@ -109,7 +109,7 @@ opdClient.get("<place id>", function(error, data) {
 });
 ````
 
-###getMulti(ids, callback(error, data))
+###getMulti(ids, callback(response))
 
 Get several places or geojson.
 
@@ -120,13 +120,13 @@ opdClient.getMulti(stuffIWant, function(response) {
   // Response will be an object with keys matching
   // the requested ids. The values will be {error, data}
   // objects.
-  for(var id in data) {
+  for(var id in response) {
     // The error property will either be
     // an Error objects or null
-    if(data[id].error){
-      handleError(id, data[id].error);
+    if(response[id].error){
+      handleError(id, response[id].error);
     } else {
-      doStuff(id, data[id].data);
+      doStuff(id, response[id].data);
     }
   }
 });
@@ -147,7 +147,7 @@ opdClient.save("<id>", data, function(error) {
 });
 ````
 
-###saveMulti(places, callback(error, data))
+###saveMulti(places, callback(data))
 
 Save multiple places or geojsons at once
 
@@ -162,10 +162,10 @@ opdClient.saveMulti(dataToSave, function(response) {
   // Response will be an object with keys matching
   // the requested ids. The values will be {error, data}
   // objects.
-  for(var id in data) {
+  for(var id in response) {
     // The error property will either be
     // an Error objects or null
-    if(data[id].error){
+    if(response[id].error){
       // Save failed
     } else {
       // Save successfull
@@ -189,7 +189,7 @@ opdClient.delete("<placeId>", function(error) {
 });
 ````
 
-###deleteMulti(places, callback(error))
+###deleteMulti(places, callback(response))
 
 Delete multiple places or geojsons
 
@@ -199,14 +199,14 @@ var places = [
   '<place2>'
 ];
 
-opdClient.deleteMulti(places, function(error, data) {
+opdClient.deleteMulti(places, function(response) {
   // Response will be an object with keys matching
   // the requested ids. The values will be {error, data}
   // objects.
-  for(var id in data) {
+  for(var id in response) {
     // The error property will either be
     // an Error objects or null
-    if(data[id].error){
+    if(response[id].error){
       // Delete failed
     } else {
       // Delete successfull
