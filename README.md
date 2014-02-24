@@ -189,17 +189,18 @@ opdClient.delete("<placeId>", function(error) {
 });
 ````
 
-###deleteMulti(places, callback(response))
+###deleteMulti(ids, callback(response))
 
 Delete multiple places or geojsons
 
 ````javascript
-var places = [
+var ids = [
   '<place1>',
-  '<place2>'
+  '<place2>',
+  '<geojson1>'
 ];
 
-opdClient.deleteMulti(places, function(response) {
+opdClient.deleteMulti(ids, function(response) {
   // Response will be an object with keys matching
   // the requested ids. The values will be {error, data}
   // objects.
